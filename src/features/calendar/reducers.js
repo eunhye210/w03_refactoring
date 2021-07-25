@@ -11,12 +11,12 @@ const initialState = {
 export default function calendarReducer(state = initialState, action) {
   switch (action.type) {
     case SHOW_NEXT_MONTH:
-      const newState = cloneDeep(state); // why use cloneDeep?
+      const newState = Object.assign({}, state);
 
       newState.displayedMonth = state.displayedMonth + 1;
 
       return newState;
     default:
-      return cloneDeep(state);
+      return Object.assign({}, state);
   }
 }
