@@ -1,5 +1,4 @@
 import { SHOW_NEXT_MONTH } from "./types";
-import { cloneDeep } from "lodash";
 
 const today = new Date();
 
