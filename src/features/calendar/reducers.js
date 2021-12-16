@@ -1,5 +1,6 @@
 import { SHOW_NEXT_MONTH } from "./types";
 
+// THINK: Would it be appropriate to store a date instance in our state tree? How would you handle this issue?
 const today = new Date();
 
 const initialState = {
