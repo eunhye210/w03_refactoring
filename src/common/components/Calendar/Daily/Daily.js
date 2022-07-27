@@ -10,8 +10,8 @@ function Daily() {
         </tr>
       </thead>
       <tbody>
-        {Array.from(Array(24).keys()).map((hour) => (
-          <>
+        {Array.from(Array(24).keys()).map((hour, index) => (
+          <React.Fragment key={index}>
             <tr>
               <td>{`${hour}:00 - ${hour}:30`}</td>
               <td>Event 1</td>
@@ -20,7 +20,7 @@ function Daily() {
               <td>{`${hour}:30 - ${hour + 1}:00`}</td>
               <td>Event 2</td>
             </tr>
-          </>
+          </React.Fragment>
         ))}
       </tbody>
     </table>
