@@ -1,22 +1,31 @@
-import { SHOW_NEXT_MONTH } from "./types";
+import { SHOW_DAY, SHOW_NEXT_DAY, SHOW_NEXT_WEEK, SHOW_PREV_DAY, SHOW_PREV_WEEK } from "./types";
 
-// THINK: Would it be appropriate to store a date instance in our state tree? How would you handle this issue?
 const today = new Date();
 
 const initialState = {
-  currentDate: today,
-  displayedMonth: today.getMonth(),
+  currentDate: today.toString(),
 };
 
 export default function calendarReducer(state = initialState, action) {
+  const newState = Object.assign({}, state);
+
   switch (action.type) {
-    case SHOW_NEXT_MONTH:
-      const newState = Object.assign({}, state);
-
-      newState.displayedMonth = state.displayedMonth + 1;
-
+    case SHOW_DAY:
+      newState.currentDate = action.value;
+      return newState;
+    case SHOW_NEXT_DAY:
+      newState.currentDate = action.value;
+      return newState;
+    case SHOW_PREV_DAY:
+      newState.currentDate = action.value;
+      return newState;
+    case SHOW_NEXT_WEEK:
+      newState.currentDate = action.value;
+      return newState;
+    case SHOW_PREV_WEEK:
+      newState.currentDate = action.value;
       return newState;
     default:
-      return Object.assign({}, state);
+      return newState;
   }
 }

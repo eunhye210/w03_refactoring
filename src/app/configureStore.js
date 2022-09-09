@@ -1,11 +1,12 @@
-import { combineReducers, applyMiddleware, createStore } from "redux";
-import logger from "redux-logger";
+import { combineReducers, legacy_createStore as createStore } from "redux";
 import calendar from "../features/calendar";
+import schedule from "../features/schedule";
 
 const reducer = combineReducers({
   calendar,
+  schedule,
 });
 
-const store = createStore(reducer, applyMiddleware(logger));
+const store = createStore(reducer);
 
 export default store;
