@@ -1,7 +1,30 @@
-import { useDispatch } from "react-redux";
-import { SHOW_DAY } from "../../../features/calendar/types";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showDay } from "../../../store/slices/calendarSlice";
+import { setCalendarType } from "../../../store/slices/modeSlice";
+import { getDate } from "../../utils/getDate";
+
+export default function DayContent({ currentDate }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const weekday = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const { year, month, date, day } = getDate(currentDate);
+
+  function moveToDailyPage() {
+    dispatch(setCalendarType({ type: "daily" }));
+    dispatch(showDay({year, month, date}));
+    navigate("/");
+  }
+
+  return (
+    <Content onClick={moveToDailyPage}>
+      <div className="day">{weekday[day]}</div>
+      <div className="date">{date}</div>
+    </Content>
+  );
+}
+
 
 const Content = styled.div`
   width: 100%;
@@ -27,31 +50,3 @@ const Content = styled.div`
     line-height: 25px;
   }
 `
-
-export default function DayContent({ currentDate }) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const weekday = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
-  const dateObj = new Date(currentDate);
-  const year = dateObj.getFullYear();
-  const month = dateObj.getMonth();
-  const date = dateObj.getDate();
-  const day = dateObj.getDay();
-
-  function moveToDailyPage() {
-    const selectElement = document.getElementById("daily-weekly-type");
-    selectElement.value="daily";
-
-    const newDate = new Date(year, month, date);
-    dispatch({ type: SHOW_DAY, value: newDate.toString() });
-    navigate("/");
-  }
-
-  return (
-    <Content onClick={moveToDailyPage}>
-      <div className="day">{weekday[day]}</div>
-      <div className="date">{date}</div>
-    </Content>
-  );
-}

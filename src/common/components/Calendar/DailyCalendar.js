@@ -3,39 +3,26 @@ import DayContent from "../CalendarContents/DayContent";
 import TimeContent from "../CalendarContents/TimeContent";
 import EventContent from "../CalendarContents/EventContent";
 import { useSelector, useDispatch } from "react-redux";
-import { SHOW_NEXT_DAY, SHOW_PREV_DAY } from "../../../features/calendar/types";
-import { Outlet } from "react-router-dom";
+import { showNextDay, showPrevDay } from "../../../store/slices/calendarSlice";
 import { Container } from "../StyledComponent";
-import { getDate } from "../../utils";
+import { getDate } from "../../utils/getDate";
+import { getDateKey } from "../../utils/getDateKey";
 
-function DailyCalendar({ setEventInfoModalId }) {
+function DailyCalendar() {
   const dispatch = useDispatch();
   const { currentDate } = useSelector(state => state.calendar);
   const { year, month, date } = getDate(currentDate);
-
-  const dateKey = `${year}-${month > 10 ? month : "0" + month}-${date > 10 ? date : "0" + date}`;
-
-  function showPrevDay() {
-    const dateObj = new Date(currentDate);
-    const newDate = new Date(dateObj.setDate(date - 1));
-    dispatch({ type: SHOW_NEXT_DAY, value: newDate.toString() });
-  }
-
-  function showNextDay() {
-    const dateObj = new Date(currentDate);
-    const newDate = new Date(dateObj.setDate(date + 1));
-    dispatch({ type: SHOW_PREV_DAY, value: newDate.toString() });
-  }
+  const dateKey = getDateKey(year, month, date);
 
   return (
     <Container>
       <div className="display">
         <div className="side-box"></div>
-        <button className="button" onClick={showPrevDay}>
+        <button className="button" onClick={() => dispatch(showPrevDay())}>
           {"<"}
         </button>
         <DayContent currentDate={currentDate} />
-        <button className="button" onClick={showNextDay}>
+        <button className="button" onClick={() => dispatch(showNextDay())}>
           {">"}
         </button>
       </div>
@@ -50,7 +37,6 @@ function DailyCalendar({ setEventInfoModalId }) {
               key={"event" + hour}
               dateKey={dateKey}
               hour={hour}
-              setEventInfoModalId={setEventInfoModalId}
             />
             <div className="space-1"></div>
           </div>

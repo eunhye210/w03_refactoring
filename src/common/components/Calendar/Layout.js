@@ -1,23 +1,10 @@
 import Header from "../Header";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ setCalendarType }) {
-  const navigate = useNavigate();
-
-  function showDailyOrWeekly(e) {
-    if (e.target.value === "daily") {
-      setCalendarType("daily");
-      navigate("/calendar/daily");
-    } else {
-      setCalendarType("weekly");
-      navigate("/calendar/weekly");
-    }
-  }
-
+export default function Layout() {
   return (
     <div>
-      <Header showDailyOrWeekly={showDailyOrWeekly} />
+      <Header />
       <Outlet />
     </div>
   );

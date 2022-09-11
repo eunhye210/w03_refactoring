@@ -10,22 +10,36 @@ const calendarSlice = createSlice({
   initialState,
   reducers: {
     showDay(state, action) {
-      state.currentDate = action.payload;
+      const { year, month, date } = action.payload;
+      const newDate = new Date(year, month - 1, date);
+      state.currentDate = newDate.toString();
     },
-    showNextDaY(state, action) {
-      state.currentDate = action.payload;
+    showNextDay(state) {
+      const dateObj = new Date(state.currentDate);
+      const date = dateObj.getDate();
+      const newDate = new Date(dateObj.setDate(date + 1));
+      state.currentDate = newDate.toString();
     },
-    showPrevDay(state, action) {
-      state.currentDate = action.payload;
+    showPrevDay(state) {
+      const dateObj = new Date(state.currentDate);
+      const date = dateObj.getDate();
+      const newDate = new Date(dateObj.setDate(date - 1));
+      state.currentDate = newDate.toString();
     },
-    showNextWeek(state, action) {
-      state.currentDate = action.payload;
+    showNextWeek(state) {
+      const dateObj = new Date(state.currentDate);
+      const date = dateObj.getDate();
+      const newDate = new Date(dateObj.setDate(date + 7));
+      state.currentDate = newDate.toString();
     },
-    showPrevWeek(state, action) {
-      state.currentDate = action.payload;
+    showPrevWeek(state) {
+      const dateObj = new Date(state.currentDate);
+      const date = dateObj.getDate();
+      const newDate = new Date(dateObj.setDate(date - 7));
+      state.currentDate = newDate.toString();
     },
   },
 });
 
-export const { showDay, showNextDaY, showPrevDay, showNextWeek, showPrevWeek } = calendarSlice.actions;
+export const { showDay, showNextDay, showPrevDay, showNextWeek, showPrevWeek } = calendarSlice.actions;
 export default calendarSlice.reducer;

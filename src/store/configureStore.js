@@ -1,12 +1,16 @@
-import { combineReducers, legacy_createStore as createStore } from "redux";
-import calendar from "../features/calendar";
-import schedule from "../features/schedule";
+import { configureStore } from "@reduxjs/toolkit";
+import calendarReducer from "./slices/calendarSlice";
+import scheduleReducer from "./slices/scheduleSlice";
+import modeReducer from "./slices/modeSlice";
 
-const reducer = combineReducers({
-  calendar,
-  schedule,
+const reducer = {
+  calendar: calendarReducer,
+  schedule: scheduleReducer,
+  mode: modeReducer,
+};
+
+const store = configureStore({
+  reducer
 });
-
-const store = createStore(reducer);
 
 export default store;

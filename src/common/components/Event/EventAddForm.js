@@ -2,82 +2,55 @@ import { FiX } from "react-icons/fi";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_SCHEDULE, DELETE_SCHEDULE } from "../../../features/schedule/types";
+import { addSchedule, deletePrevSchedule } from "../../../store/slices/scheduleSlice";
+import { setEventId } from "../../../store/slices/modeSlice";
 import { Container } from "./EventStyledComponent";
 
-export default function EventAddForm({
-  calendarType,
-  eventInfoModalId,
-  setEventInfoModalId
-}) {
+export default function EventAddForm() {
   const { schedule } = useSelector(state => state.schedule);
+  const { calendarType, eventId } = useSelector(state => state.mode);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [eventDate, eventTime] = eventInfoModalId?.split("&");
-  const { title, description, startTime, endTime } = eventInfoModalId 
-    ? schedule[eventDate][eventTime]
+  const [date, time] = eventId?.split("&");
+  const { title, description, startTime, endTime } = eventId
+    ? schedule[date][time]
     : { title: null, description: null, startTime: null, endTime: null };
 
-  const [title2, setTitle2] = useState(title);
-  const [description2, setDescription2] = useState(description);
-  const [date2, setDate2] = useState(eventDate);
-  const [startTime2, setStartTime2] = useState(startTime);
-  const [endTime2, setEndTime2] = useState(endTime);
+  const [eventTitle, setEventTitle] = useState(title);
+  const [eventDescription, setEventDescription] = useState(description);
+  const [eventDate, setEventDate] = useState(date);
+  const [eventStartTime, setEventStartTime] = useState(startTime);
+  const [eventEndTime, setEventEndTime] = useState(endTime);
 
   function onSubmit() {
-    if (!title2 || !description2 || !date2 || !startTime2 || !endTime2) {
+    if (!eventTitle || !eventDescription || !eventDate || !eventStartTime || !eventEndTime) {
       alert("모든 항목을 채워야 합니다.");
-      setEventInfoModalId("");
+      dispatch(setEventId({ id: "" }));
       return;
     }
 
-    if (startTime2 >= endTime2) {
+    if (eventStartTime >= eventEndTime) {
       alert("최소 한 시간 이상 선택해야 합니다.");
-      setEventInfoModalId("");
+      dispatch(setEventId({ id: "" }));
       return;
     }
 
-    const prevEventDateObj = schedule[eventDate];
-    for (let time = startTime; time < endTime; time++) {
-      delete prevEventDateObj[time];
-    }
+    dispatch(deletePrevSchedule({ date, startTime, endTime }));
 
-    dispatch({
-      type: DELETE_SCHEDULE,
-      deletedObj: prevEventDateObj,
-      dateValue: eventDate,
-    });
-
-    const newEventDateObj = schedule[date2];
+    const newEventDateObj = schedule[eventDate];
     if (newEventDateObj) {
-      for (let time = startTime2; time < endTime2; time++) {
+      for (let time = eventStartTime; time < eventEndTime; time++) {
         if (newEventDateObj.hasOwnProperty(time)) {
           alert("이미 추가된 일정이 있습니다.");
-          setEventInfoModalId("");
+          dispatch(setEventId({ id: "" }));
           return;
         }
       }
     }
 
-    const editSchedule = {};
-    for (let time = startTime2; time < endTime2; time++) {
-      editSchedule[time] = {
-        title: title2,
-        description: description2,
-        startTime: startTime2,
-        endTime: endTime2,
-      };
-    }
-
-    dispatch({
-      type: ADD_SCHEDULE,
-      addedObj: {
-        key: date2,
-        value: editSchedule,
-      }
-    });
-    setEventInfoModalId("");
+    dispatch(addSchedule({ eventDate, eventStartTime, eventEndTime, eventTitle, eventDescription }));
+    dispatch(setEventId({ id: "" }));
     navigate(`../../calendar/${calendarType}`);
   }
 
@@ -90,26 +63,45 @@ export default function EventAddForm({
         <h1 className="h1">일정</h1>
         <div className="view-type1">
           <div className="display">title : </div>
-          <input onChange={(e) => setTitle2(e.target.value)} defaultValue={title} />
+          <input
+            defaultValue={eventTitle}
+            onChange={(e) => setEventTitle(e.target.value)}
+          />
         </div>
         <div className="view-type2">
-          <div>description :</div>
-          <textarea rows="5" cols="40" onChange={(e) => setDescription2(e.target.value)} defaultValue={description} />
+          <div>description : </div>
+          <textarea
+            rows="5"
+            cols="40"
+            defaultValue={eventDescription}
+            onChange={(e) => setEventDescription(e.target.value)}
+          />
         </div>
         <div className="view-type1">
-          <div className="display">date :</div>
-          <input type="date" id="event-date" onChange={(e) => setDate2(e.target.value)} defaultValue={eventDate} />
+          <div className="display">date : </div>
+          <input
+            type="date"
+            id="event-date"
+            defaultValue={eventDate}
+            onChange={(e) => setEventDate(e.target.value)}
+          />
         </div>
         <div className="view-type1">
-          <div className="display">time :</div>
+          <div className="display">time : </div>
           <div className="view-type1">
-            <select onChange={(e) => setStartTime2(Number(e.target.value))} defaultValue={Number(startTime)}>
+            <select
+              defaultValue={Number(eventStartTime)}
+              onChange={(e) => setEventStartTime(Number(e.target.value))}
+            >
               {Array.from(Array(24).keys()).map((hour) =>
                 <option key={hour} value={hour}>{hour + " : 00"}</option>
               )}
             </select>
             <div>~</div>
-            <select onChange={(e) => setEndTime2(Number(e.target.value))} defaultValue={Number(endTime)}>
+            <select
+              defaultValue={Number(eventEndTime)}
+              onChange={(e) => setEventEndTime(Number(e.target.value))}
+            >
               {Array.from(Array(24).keys()).map((hour) =>
                 <option key={hour} value={hour}>{hour + " : 00"}</option>
               )}

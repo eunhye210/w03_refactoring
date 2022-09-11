@@ -1,15 +1,27 @@
 import React from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setCalendarType } from "../../../store/slices/modeSlice";
 import { FcTodoList } from "react-icons/fc";
-import { getDate } from "../../utils";
+import { getDate } from "../../utils/getDate";
 
-export default function Header({ showDailyOrWeekly }) {
+export default function Header() {
   let location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { currentDate } = useSelector(state => state.calendar);
   const { year, month } = getDate(currentDate);
+
+  function showDailyOrWeekly(e) {
+    if (e.target.value === "daily") {
+      dispatch(setCalendarType({ type: "daily" }));
+      navigate("/calendar/daily");
+    } else {
+      dispatch(setCalendarType({ type: "weekly" }));
+      navigate("/calendar/weekly");
+    }
+  }
 
   return (
     <Container>

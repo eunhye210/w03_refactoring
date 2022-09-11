@@ -1,46 +1,34 @@
 import { FiX } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { DELETE_SCHEDULE } from "../../../features/schedule/types";
+import { deleteSchedule } from "../../../store/slices/scheduleSlice";
+import { setEventId } from "../../../store/slices/modeSlice";
 import { Container } from "./EventStyledComponent";
 
-export default function EventDetail({
-  calendarType,
-  eventInfoModalId,
-  setEventInfoModalId,
-}) {
+export default function EventDetail() {
   const { schedule } = useSelector(state => state.schedule);
+  const { calendarType, eventId } = useSelector(state => state.mode);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const eventInfoModalIdArr = eventInfoModalId.split("&");
-  const eventDate = eventInfoModalIdArr[0];
-  const eventTime = eventInfoModalIdArr[1];
-
+  const [ eventDate, eventTime ] = eventId.split("&");
   const { title, description, startTime, endTime } = schedule[eventDate][eventTime];
 
   function editEvent() {
-    setEventInfoModalId(eventInfoModalId);
-    navigate("../../events/new", { state: {backgroundLocation: `/calendar/${calendarType}` }});
+    dispatch(setEventId({ id: eventId }));
+    navigate("../../events/new", { state: { backgroundLocation: `/calendar/${calendarType}` }});
   }
 
   function deleteEvent() {
-    const eventDateObj = schedule[eventDate];
-    for (let time = startTime; time < endTime; time++) {
-      delete eventDateObj[time];
-    }
-
-    dispatch({
-      type: DELETE_SCHEDULE,
-      deletedObj: eventDateObj,
-      dateValue: eventDate,
-    });
-    setEventInfoModalId("");
+    const eventStartTime = startTime;
+    const eventEndTime = endTime;
+    dispatch(deleteSchedule({ eventDate, eventStartTime, eventEndTime }));
+    dispatch(setEventId({ id: "" }));
     navigate(`../../calendar/${calendarType}`);
   }
 
   function onClose() {
-    setEventInfoModalId("");
+    dispatch(setEventId({ id: "" }));
     navigate(`../../calendar/${calendarType}`);
   }
 
@@ -56,15 +44,15 @@ export default function EventDetail({
           <div>{title}</div>
         </div>
         <div className="view-type3">
-          <div>description :</div>
+          <div>description : </div>
           <div>{description}</div>
         </div>
         <div className="view-type3">
-          <div className="display">date :</div>
+          <div className="display">date : </div>
           <div>{eventDate}</div>
         </div>
         <div className="view-type3">
-          <div className="display">time :</div>
+          <div className="display">time : </div>
           <div>{startTime + " : 00"}</div>
           <div>~</div>
           <div>{endTime + " : 00"}</div>

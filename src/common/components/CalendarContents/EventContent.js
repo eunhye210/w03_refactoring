@@ -1,19 +1,11 @@
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { setEventId } from "../../../store/slices/modeSlice";
 
-const Content = styled.div`
-  display: inline-block;
-  width: 100%;
-  height: auto;
-  border-top: 1px solid;
-  border-right: 1px solid;
-  border-color: lightgray;
-  background-color: ${props => props.color};
-`
-
-export default function EventContent({ dateKey, hour, setEventInfoModalId }) {
+export default function EventContent({ dateKey, hour }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const { schedule } = useSelector(state => state.schedule);
   const id = dateKey + "&" + hour;
@@ -35,8 +27,8 @@ export default function EventContent({ dateKey, hour, setEventInfoModalId }) {
 
   function showEventInfoModal() {
     if (color === "lavender") {
-      setEventInfoModalId(id);
-      navigate(`../../events/${id}`, { state: {backgroundLocation: location }});
+      dispatch(setEventId({ id: id }));
+      navigate(`../../events/${id}`, { state: { backgroundLocation: location }});
     } else {
       alert('일정이 존재하지 않습니다.');
     }
@@ -48,3 +40,14 @@ export default function EventContent({ dateKey, hour, setEventInfoModalId }) {
     </Content>
   );
 }
+
+
+const Content = styled.div`
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  border-top: 1px solid;
+  border-right: 1px solid;
+  border-color: lightgray;
+  background-color: ${props => props.color};
+`

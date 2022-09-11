@@ -1,5 +1,16 @@
 import styled from "styled-components";
 
+export default function TimeContent({ time }) {
+  return (
+    <Content>
+      <div className="content-time">
+        <span className="time">{time}</span>
+      </div>
+      <div className="content-sub"></div>
+    </Content>
+  );
+}
+
 const Content = styled.div`
   display: flex;
   .content-time {
@@ -22,14 +33,3 @@ const Content = styled.div`
     border-color: lightgray;
   }
 `
-
-export default function TimeContent({ time }) {
-  return (
-    <Content>
-      <div className="content-time">
-        <span className="time">{time}</span>
-      </div>
-      <div className="content-sub"></div>
-    </Content>
-  );
-}
