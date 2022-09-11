@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { SHOW_DAY } from "../../../../features/calendar/types";
+import { SHOW_DAY } from "../../../features/calendar/types";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 

@@ -3,11 +3,11 @@ import DayContent from "../CalendarContents/DayContent";
 import TimeContent from "../CalendarContents/TimeContent";
 import EventContent from "../CalendarContents/EventContent";
 import { useDispatch, useSelector } from "react-redux";
-import { SHOW_NEXT_WEEK, SHOW_PREV_WEEK } from "../../../../features/calendar/types";
+import { SHOW_NEXT_WEEK, SHOW_PREV_WEEK } from "../../../features/calendar/types";
 import { Outlet } from "react-router-dom";
-import { Container } from "../../StyledComponent";
+import { Container } from "../StyledComponent";
 
-function Weekly({ setEventInfoModalId }) {
+function WeeklyCalendar({ setEventInfoModalId }) {
   const dispatch = useDispatch();
   const { currentDate } = useSelector(state => state.calendar);
 
@@ -81,4 +81,4 @@ function Weekly({ setEventInfoModalId }) {
   );
 }
 
-export default Weekly;
+export default WeeklyCalendar;

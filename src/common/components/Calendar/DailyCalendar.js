@@ -3,10 +3,10 @@ import DayContent from "../CalendarContents/DayContent";
 import TimeContent from "../CalendarContents/TimeContent";
 import EventContent from "../CalendarContents/EventContent";
 import { useSelector, useDispatch } from "react-redux";
-import { SHOW_NEXT_DAY, SHOW_PREV_DAY } from "../../../../features/calendar/types";
+import { SHOW_NEXT_DAY, SHOW_PREV_DAY } from "../../../features/calendar/types";
 import { Outlet } from "react-router-dom";
-import { Container } from "../../StyledComponent";
-import { getDate } from "../../../utils";
+import { Container } from "../StyledComponent";
+import { getDate } from "../../utils";
 
 function DailyCalendar({ setEventInfoModalId }) {
   const dispatch = useDispatch();

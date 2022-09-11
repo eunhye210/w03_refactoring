@@ -10,6 +10,7 @@ import Layout from "../common/components/Calendar/Layout";
 function App() {
   let location = useLocation();
   let background = location.state && location.state.backgroundLocation;
+
   const [calendarType, setCalendarType] = useState("daily");
   const [eventInfoModalId, setEventInfoModalId] = useState("");
   console.log(eventInfoModalId);
